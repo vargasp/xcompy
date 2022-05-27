@@ -227,8 +227,10 @@ def cmpatten(name,E,attentype='total'):
     Mass = [0]*len(Elems)
     for i in range(len(Elems)):
         if Elems[i][-1].isdigit():
-            Quant[i] = float(re.split('[^0-9\.]*',Elems[i])[1])
-            Elems[i]= re.split('[0-9]*',Elems[i])[0]            
+            #Quant[i] = float(re.split('[^0-9\.]*',Elems[i])[1])
+            #Elems[i]= re.split('[0-9]*',Elems[i])[0]         
+            Quant[i] = float(re.split('(\d+)',Elems[i])[1])
+            Elems[i]= re.split('(\d+)',Elems[i])[0]         
         else:
             Quant[i] = 1
         Mass[i] = getAtomicMass(parseElement(Elems[i]))
@@ -471,36 +473,9 @@ def parseAtmNum(a_num):
     return symbols[a_num-1]
 
 
-# returns the atomic number when the chemical name is queried
-def parseAtmNum(a_num):
-    """
-    Finds the atomic number for an atom specified by element symbol
-     
-    Example: Z = parseElement(symbol)
-     
-    INPUTS:
-    name - 1 or 2 character String specifying element name
-     
-    OUTPUTS:
-    Z - integer representing atomic number
-    """
-
-
-    symbols = ['H','He','Li','Be','B','C','N','O','F','Ne','Na','Mg','Al','Si',\
-    'P','S','Cl','Ar','K','Ca','Sc','Ti','V','Cr','Mn','Fe','Co','Ni','Cu','Zn',\
-    'Ga','Ge','As','Se','Br','Kr','Rb','Sr','Y','Zr','Nb','Mo','Tc','Ru','Rh',\
-    'Pd','Ag','Cd','In','Sn','Sb','Te','I','Xe','Cs','Ba','La','Ce','Pr','Nd',\
-    'Pm','Sm','Eu','Gd','Tb','Dy','Ho','Er','Tm','Yb','Lu','Hf','Ta','W','Re',\
-    'Os','Ir','Pt','Au','Hg','Tl','Pb','Bi','Po','At','Rn','Fr','Ra','Ac','Th',\
-    'Pa','U','Np','Pu','Am','Cm','Bk','Cf','Es','Fm']
-
-    return symbols[a_num-1]
-
-
 def getEnergyTransfer(energies):
     transfer_array = np.loadtxt(rootpath +'/data/energy-transfer.csv',delimiter=',',skiprows=1)
 
     energies_grid,atten_grid,transfer_grid = np.split(transfer_array,3,axis=1)
     
     return np.interp(energies, energies_grid.squeeze(), transfer_grid.squeeze())
-
